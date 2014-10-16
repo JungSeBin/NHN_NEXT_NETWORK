@@ -18,11 +18,13 @@
 #define IP "127.0.0.1"
 #define PORT 3000
 #define WRITE_DATA "Hello World!"
+#define MAX_DATA 100
 
 int main()
 {
 	int ret = -1;
 	int clientSock;
+	char buf[MAX_DATA] = { NULL, };
 	struct sockaddr_in serverAddr;
 
 	WSADATA wsa;
@@ -53,6 +55,14 @@ int main()
 	}
 	else
 		printf("Wrote '%s' (%d Bytes)\n", WRITE_DATA, ret);
+
+	if ((ret = recv(clientSock, buf, MAX_DATA, 0)) <= 0) {
+		perror("send");
+		ret = -1;
+	}
+	else
+		printf("Read '%s' (%d Bytes)\n", buf, ret);
+
 
 error:
 	closesocket(clientSock);
